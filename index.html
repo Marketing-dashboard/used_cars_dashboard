@@ -396,16 +396,23 @@ function renderTab0(){
     var dates=rows.map(function(r){return r.dateStr;}).sort();
     return parseInt(dates[dates.length-1].slice(8,10))===monthTotalDays(ms);
   }
-  function completeWeeks(rows){
-    // A week is complete if it has exactly 7 unique data dates
+  function completeWeeks(rows, isCurrentMonth){
+    // A week is complete if it has exactly 7 days.
+    // For the current (incomplete) month, also include the latest partial week
+    // so that as data is added day by day, the latest week always shows.
     var wMap={};
     rows.forEach(function(r){
       if(!wMap[r.wom]) wMap[r.wom]=new Set();
       wMap[r.wom].add(r.dateStr);
     });
+    var allWks = Object.keys(wMap).map(Number).sort(function(a,b){return a-b;});
     var cw=[];
-    Object.keys(wMap).forEach(function(wn){
-      if(wMap[wn].size===7) cw.push(parseInt(wn));
+    allWks.forEach(function(wn){
+      if(wMap[wn].size===7){
+        cw.push(wn); // full 7-day week — always show
+      } else if(isCurrentMonth && wn===allWks[allWks.length-1]){
+        cw.push(wn); // latest partial week of current month — show it growing
+      }
     });
     return cw.sort();
   }
@@ -415,9 +422,11 @@ function renderTab0(){
   var bothComplete = bmComplete && cmComplete;
 
   // Weeks to show in WoW = weeks complete in COMPARISON (cm) month
-  var cmCompleteWeeks = completeWeeks(cRows);
+  var cmCompleteWeeks = completeWeeks(cRows, !cmComplete); // true = current month still ongoing
   // Intersect with base month data presence (base month may be partial but we still show if comp is complete)
-  var wowWeeks = cmCompleteWeeks;
+  // Only show weeks that exist in BOTH months (base must have data for the week)
+    var bmWomSet = new Set(bRows.map(function(r){return r.wom;}));
+    var wowWeeks = cmCompleteWeeks.filter(function(wn){return bmWomSet.has(wn);});
 
   var cities = sortCities([...new Set([...bRows,...cRows].map(function(r){return r.city;}))]);
 
@@ -679,7 +688,14 @@ function renderTab3(){
   var MDAYS={Jan:31,Feb:28,Mar:31,Apr:30,May:31,Jun:30,Jul:31,Aug:31,Sep:30,Oct:31,Nov:30,Dec:31};
   var MNUM={Jan:1,Feb:2,Mar:3,Apr:4,May:5,Jun:6,Jul:7,Aug:8,Sep:9,Oct:10,Nov:11,Dec:12};
   var months=[...new Set(DATA.map(function(r){return r.month;}))].sort(function(a,b){return monthSortKey(a)-monthSortKey(b);});
-  function activeDays(rows){return new Set(rows.map(function(r){return r.dateStr;})).size||1;}
+  function activeDays(rows){
+    // Count days that have actual lead data — not spend-only rows
+    // This matches the raw Excel active days exactly
+    return new Set(
+      rows.filter(function(r){return r.gen_leads>0||r.triggered>0;})
+          .map(function(r){return r.dateStr;})
+    ).size || 1;
+  }
   function getA(rows){
     var sp=0,gl=0,tr=0,dt=0;
     rows.forEach(function(r){sp+=r.spends;gl+=r.gen_leads;tr+=r.triggered;dt+=r.dealer_triggers;});
