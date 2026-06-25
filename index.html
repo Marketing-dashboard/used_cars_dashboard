@@ -137,30 +137,8 @@ body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',system-ui,sans-seri
   </div>
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
     <div id="dataDateBadge" style="display:flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);font-size:12px;color:var(--text2)"><i class="ti ti-calendar-check" style="font-size:13px;color:var(--navy)"></i><span>Data up to: <b id="dataDateText" style="color:var(--navy)">—</b></span></div>
-    <button onclick="document.getElementById('localFilePanel').style.display=document.getElementById('localFilePanel').style.display==='none'?'flex':'none'" style="display:flex;align-items:center;gap:6px;padding:8px 14px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);color:var(--text2);font-size:12px;font-weight:600;cursor:pointer;font-family:inherit"><i class="ti ti-upload" style="font-size:14px"></i>Load local files</button>
   </div>
 </div>
-<div id="localFilePanel" style="display:none;align-items:flex-start;gap:12px;padding:14px 16px;background:var(--navy-light);border:1px solid var(--border);border-radius:var(--r);margin-bottom:14px;flex-wrap:wrap">
-  <div style="font-size:12px;color:var(--text2);flex:0 0 100%;margin-bottom:4px"><i class="ti ti-info-circle" style="color:var(--navy);margin-right:4px"></i><b style="color:var(--navy)">Load from local files</b> — pick your updated Excel files to refresh without pushing to GitHub.</div>
-  <div style="display:flex;align-items:center;gap:8px">
-    <label style="font-size:12px;font-weight:600;color:var(--text2)">data.xlsx</label>
-    <label style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);font-size:12px;color:var(--text);cursor:pointer;font-family:inherit">
-      <i class="ti ti-file-spreadsheet" style="font-size:13px;color:var(--navy)"></i>
-      <span id="leadsFileName">Choose file…</span>
-      <input type="file" id="leadsFileInput" accept=".xlsx" style="display:none" onchange="onLeadsFileChange(this)">
-    </label>
-  </div>
-  <div style="display:flex;align-items:center;gap:8px">
-    <label style="font-size:12px;font-weight:600;color:var(--text2)">Used_Cars_Spends.xlsx</label>
-    <label style="display:inline-flex;align-items:center;gap:5px;padding:6px 12px;border-radius:var(--r);border:1px solid var(--border);background:var(--surface);font-size:12px;color:var(--text);cursor:pointer;font-family:inherit">
-      <i class="ti ti-file-spreadsheet" style="font-size:13px;color:var(--navy)"></i>
-      <span id="spendsFileName">Choose file…</span>
-      <input type="file" id="spendsFileInput" accept=".xlsx" style="display:none" onchange="onSpendsFileChange(this)">
-    </label>
-  </div>
-  <button id="loadLocalBtn" onclick="loadLocalFiles()" disabled style="display:flex;align-items:center;gap:6px;padding:8px 16px;border-radius:var(--r);border:none;background:var(--navy);color:#fff;font-size:12px;font-weight:600;cursor:not-allowed;font-family:inherit;opacity:.5"><i class="ti ti-refresh" style="font-size:13px"></i>Refresh dashboard</button>
-</div>
-
 <div id="msgBox" class="msg"></div>
 <div id="loadingState">
   <div class="spinner"></div>
@@ -1062,50 +1040,6 @@ function updateDataDateBadge(){
   document.getElementById('dataDateText').textContent=parseInt(p[2],10)+' '+mn[parseInt(p[1],10)-1]+' '+p[0];
 }
 
-// ── LOCAL FILE LOADER ─────────────────────────────────────────────────────────
-var _localLeadsBuffer=null, _localSpendsBuffer=null;
-function readFileAsArrayBuffer(file){
-  return new Promise(function(resolve,reject){
-    var fr=new FileReader();
-    fr.onload=function(e){resolve(e.target.result);};
-    fr.onerror=function(){reject(new Error('Failed to read '+file.name));};
-    fr.readAsArrayBuffer(file);
-  });
-}
-function onLeadsFileChange(input){
-  var f=input.files[0]; if(!f) return;
-  document.getElementById('leadsFileName').textContent=f.name;
-  readFileAsArrayBuffer(f).then(function(buf){_localLeadsBuffer=buf;updateLoadLocalBtn();});
-}
-function onSpendsFileChange(input){
-  var f=input.files[0]; if(!f) return;
-  document.getElementById('spendsFileName').textContent=f.name;
-  readFileAsArrayBuffer(f).then(function(buf){_localSpendsBuffer=buf;updateLoadLocalBtn();});
-}
-function updateLoadLocalBtn(){
-  var btn=document.getElementById('loadLocalBtn'),ready=_localLeadsBuffer&&_localSpendsBuffer;
-  btn.disabled=!ready; btn.style.opacity=ready?'1':'.5'; btn.style.cursor=ready?'pointer':'not-allowed';
-}
-function loadLocalFiles(){
-  if(!_localLeadsBuffer||!_localSpendsBuffer) return;
-  if(typeof XLSX==='undefined'){showMsg('\u26a0 Excel parser not loaded yet. Please wait and try again.','err');return;}
-  document.getElementById('loadingState').style.display='flex';
-  try{
-    var lWb=XLSX.read(new Uint8Array(_localLeadsBuffer),{type:'array',cellDates:true,dense:false});
-    var sWb=XLSX.read(new Uint8Array(_localSpendsBuffer),{type:'array',cellDates:true,dense:false});
-    DATA=mergeMaps(parseLeads(lWb),parseSpends(sWb));
-    document.getElementById('loadingState').style.display='none';
-    reinitAll();
-    updateDataDateBadge();
-    var tot=agg(DATA);
-    var months=[...new Set(DATA.map(function(r){return r.month;}))].sort(function(a,b){return monthSortKey(a)-monthSortKey(b);});
-    showMsg('\u2713 Loaded from local files \u2014 '+months.join(', ')+' | '+DATA.length+' rows | Gen Leads: '+NUM(tot.gl),'ok');
-    document.getElementById('localFilePanel').style.display='none';
-  }catch(e){
-    document.getElementById('loadingState').style.display='none';
-    showMsg('\u26a0 Error reading files: '+e.message,'err');
-  }
-}
 </script>
 </body>
 </html>
