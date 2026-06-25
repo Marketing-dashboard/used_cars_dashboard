@@ -263,8 +263,8 @@ var CAMP_MAP={
 };
 function getCity(c){return (CAMP_MAP[c]||{}).city||c;}
 function getPlatform(c){return (CAMP_MAP[c]||{}).platform||'Unknown';}
-function getMonth(d){var mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return mn[d.getUTCMonth()]+"'"+String(d.getUTCFullYear()).slice(2);}
-function toDateStr(d){var yr=d.getUTCFullYear(),mo=String(d.getUTCMonth()+1).padStart(2,'0'),dy=String(d.getUTCDate()).padStart(2,'0');return yr+'-'+mo+'-'+dy;}
+function getMonth(d){var mn=['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];return mn[d.getMonth()]+"'"+String(d.getFullYear()).slice(2);}
+function toDateStr(d){var yr=d.getFullYear(),mo=String(d.getMonth()+1).padStart(2,'0'),dy=String(d.getDate()).padStart(2,'0');return yr+'-'+mo+'-'+dy;}
 function wom(ds){var day=parseInt(ds.slice(8,10));return Math.floor((day-1)/7)+1;}
 
 // ── FORMAT ────────────────────────────────────────────────────────────────────
