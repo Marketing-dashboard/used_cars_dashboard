@@ -589,21 +589,21 @@ onAuthStateChanged(auth, async (user) => {
 <!-- ── DASHBOARD LOGIC ── -->
 <script>
 var DATA_RAW = [
-  {Campaign:"AHM-Search-Buy-Used-Car-8april", Spends:159174.44, Impressions:341804, Clicks:65586, Conversions:6520.35, Platform:"Google", City:"Ahmedabad", Type:"Search", Triggered_Leads:3144, Dealer_Triggers:1514, Status:"Ongoing", StartDate:"2026-04-08", EndDate:null},
-  {Campaign:"AHM-UCR-Catalogue-Ads", Spends:110706.45, Impressions:3594207, Clicks:328087, Conversions:3880, Platform:"Meta", City:"Ahmedabad", Type:"Catalogue", Triggered_Leads:4327, Dealer_Triggers:2763, Status:"Ongoing", StartDate:"2026-04-20", EndDate:null},
-  {Campaign:"Chandigarh-UCR-Catalogue-Ads", Spends:85333.09, Impressions:2824447, Clicks:183754, Conversions:1420, Platform:"Meta", City:"Chandigarh", Type:"Catalogue", Triggered_Leads:1442, Dealer_Triggers:1078, Status:"Ongoing", StartDate:"2026-04-22", EndDate:null},
-  {Campaign:"CHD-Buyer-Acquisition-6April", Spends:152914.51, Impressions:301468, Clicks:64463, Conversions:5635.14, Platform:"Google", City:"Chandigarh", Type:"Search", Triggered_Leads:2407, Dealer_Triggers:1039, Status:"Ongoing", StartDate:"2026-04-06", EndDate:null},
+  {Campaign:"AHM-Search-Buy-Used-Car-8april", Spends:159174.44, Impressions:341804, Clicks:65586, Conversions:6520.35, Platform:"Google", City:"Ahmedabad", Type:"Search", Triggered_Leads:3191, Dealer_Triggers:1535, Status:"Ongoing", StartDate:"2026-04-08", EndDate:null},
+  {Campaign:"AHM-UCR-Catalogue-Ads", Spends:110706.45, Impressions:3594207, Clicks:328087, Conversions:3880, Platform:"Meta", City:"Ahmedabad", Type:"Catalogue", Triggered_Leads:4479, Dealer_Triggers:2894, Status:"Ongoing", StartDate:"2026-04-20", EndDate:null},
+  {Campaign:"Chandigarh-UCR-Catalogue-Ads", Spends:85333.09, Impressions:2824447, Clicks:183754, Conversions:1420, Platform:"Meta", City:"Chandigarh", Type:"Catalogue", Triggered_Leads:1536, Dealer_Triggers:1156, Status:"Ongoing", StartDate:"2026-04-22", EndDate:null},
+  {Campaign:"CHD-Buyer-Acquisition-6April", Spends:152914.51, Impressions:301468, Clicks:64463, Conversions:5635.14, Platform:"Google", City:"Chandigarh", Type:"Search", Triggered_Leads:2457, Dealer_Triggers:1069, Status:"Ongoing", StartDate:"2026-04-06", EndDate:null},
   {Campaign:"Demand-Gen-CHD-1july-UC", Spends:1373.62, Impressions:5471, Clicks:88, Conversions:0, Platform:"Google", City:"Chandigarh", Type:"Demand Gen", Triggered_Leads:0, Dealer_Triggers:0, Status:"Experiment · Paused", StartDate:"2026-07-01", EndDate:"2026-07-03"},
   {Campaign:"Demand-Gen-Nashik-1july-UC", Spends:37356.92, Impressions:378313, Clicks:5823, Conversions:115.06, Platform:"Google", City:"Nashik", Type:"Demand Gen", Triggered_Leads:72, Dealer_Triggers:53, Status:"Experiment · Ongoing", StartDate:"2026-07-01", EndDate:null},
   {Campaign:"Nashik-App-downlaod", Spends:7675.45, Impressions:72104, Clicks:7037, Conversions:1092, Platform:"Google", City:"Nashik", Type:"Search", Triggered_Leads:0, Dealer_Triggers:0, Status:"Ongoing", StartDate:"2026-07-15", EndDate:null},
   {Campaign:"Nashik-DSA-UsedCars-Discovery", Spends:597.78, Impressions:874, Clicks:130, Conversions:0, Platform:"Google", City:"Nashik", Type:"Search", Triggered_Leads:0, Dealer_Triggers:0, Status:"Paused", StartDate:"2026-06-10", EndDate:"2026-06-10"},
   {Campaign:"Nashik-pmax-Used-car-16june", Spends:16717.71, Impressions:52786, Clicks:5685, Conversions:575.93, Platform:"Google", City:"Nashik", Type:"Performance Max", Triggered_Leads:229, Dealer_Triggers:192, Status:"Experiment · Ongoing", StartDate:"2026-06-16", EndDate:null},
-  {Campaign:"Nashik-UCR-Catalogue-Ads", Spends:259834.81, Impressions:6218613, Clicks:256712, Conversions:2302, Platform:"Meta", City:"Nashik", Type:"Catalogue", Triggered_Leads:2408, Dealer_Triggers:2081, Status:"Ongoing", StartDate:"2026-04-22", EndDate:null},
+  {Campaign:"Nashik-UCR-Catalogue-Ads", Spends:259834.81, Impressions:6218613, Clicks:256712, Conversions:2302, Platform:"Meta", City:"Nashik", Type:"Catalogue", Triggered_Leads:2576, Dealer_Triggers:2242, Status:"Ongoing", StartDate:"2026-04-22", EndDate:null},
   {Campaign:"Nashik-UCR-Static-Website", Spends:4156.98, Impressions:32359, Clicks:365, Conversions:12, Platform:"Meta", City:"Nashik", Type:"Website Conversion", Triggered_Leads:9, Dealer_Triggers:7, Status:"Experiment · Paused", StartDate:"2026-07-06", EndDate:"2026-07-10"},
   {Campaign:"Nashik-VIA-21July-Catalogue", Spends:11356.71, Impressions:155147, Clicks:5971, Conversions:76, Platform:"Meta", City:"Nashik", Type:"Catalogue", Triggered_Leads:0, Dealer_Triggers:0, Status:"Ongoing", StartDate:"2026-07-21", EndDate:null},
   {Campaign:"Nashik-Whatsup-Leads", Spends:509.13, Impressions:11113, Clicks:95, Conversions:7, Platform:"Meta", City:"Nashik", Type:"WhatsApp", Triggered_Leads:0, Dealer_Triggers:0, Status:"Experiment · Paused", StartDate:"2026-07-13", EndDate:"2026-07-13"},
   {Campaign:"Nashik-Whatsup-Leads -13thJuly", Spends:50007.25, Impressions:1205747, Clicks:7310, Conversions:846, Platform:"Meta", City:"Nashik", Type:"WhatsApp", Triggered_Leads:0, Dealer_Triggers:0, Status:"Experiment · Ongoing", StartDate:"2026-07-13", EndDate:null},
-  {Campaign:"Nasik-Search-Buy-UsedCar-8april", Spends:168260.43, Impressions:167409, Clicks:38851, Conversions:4030.15, Platform:"Google", City:"Nashik", Type:"Search", Triggered_Leads:1675, Dealer_Triggers:1226, Status:"Ongoing", StartDate:"2026-04-08", EndDate:null},
+  {Campaign:"Nasik-Search-Buy-UsedCar-8april", Spends:168260.43, Impressions:167409, Clicks:38851, Conversions:4030.15, Platform:"Google", City:"Nashik", Type:"Search", Triggered_Leads:1718, Dealer_Triggers:1261, Status:"Ongoing", StartDate:"2026-04-08", EndDate:null},
   {Campaign:"UC-DSA-Nashik-UsedCars", Spends:9151.82, Impressions:22016, Clicks:3510, Conversions:453.08, Platform:"Google", City:"Nashik", Type:"Search", Triggered_Leads:25, Dealer_Triggers:14, Status:"Paused", StartDate:"2026-06-13", EndDate:"2026-06-22"},
   {Campaign:"YT_UC_Nashik", Spends:5405.49, Impressions:19153, Clicks:236, Conversions:4, Platform:"Google", City:"Nashik", Type:"YouTube", Triggered_Leads:1, Dealer_Triggers:0, Status:"Paused", StartDate:"2026-07-14", EndDate:"2026-07-17"}
 ];
@@ -2238,7 +2238,21 @@ var DATA_TRIGGERS = [
   {Date:"2026-07-24",Campaign:"Nashik-pmax-Used-car-16june",Triggered_Leads:1,Dealer_Triggers:0},
   {Date:"2026-07-24",Campaign:"Nashik-UCR-Catalogue-Ads",Triggered_Leads:72,Dealer_Triggers:68},
   {Date:"2026-07-24",Campaign:"Nasik-Search-Buy-UsedCar-8april",Triggered_Leads:8,Dealer_Triggers:7},
-  {Date:"2026-07-24",Campaign:"Nashik-Whatsup-Leads -13thJuly",Triggered_Leads:16,Dealer_Triggers:13}
+  {Date:"2026-07-24",Campaign:"Nashik-Whatsup-Leads -13thJuly",Triggered_Leads:16,Dealer_Triggers:13},
+  {Date:"2026-07-25",Campaign:"AHM-Search-Buy-Used-Car-8april",Triggered_Leads:16,Dealer_Triggers:7},
+  {Date:"2026-07-25",Campaign:"AHM-UCR-Catalogue-Ads",Triggered_Leads:70,Dealer_Triggers:62},
+  {Date:"2026-07-25",Campaign:"Chandigarh-UCR-Catalogue-Ads",Triggered_Leads:40,Dealer_Triggers:32},
+  {Date:"2026-07-25",Campaign:"CHD-Buyer-Acquisition-6April",Triggered_Leads:23,Dealer_Triggers:14},
+  {Date:"2026-07-25",Campaign:"Nashik-UCR-Catalogue-Ads",Triggered_Leads:85,Dealer_Triggers:80},
+  {Date:"2026-07-25",Campaign:"Nasik-Search-Buy-UsedCar-8april",Triggered_Leads:31,Dealer_Triggers:27},
+  {Date:"2026-07-25",Campaign:"Nashik-Whatsup-Leads -13thJuly",Triggered_Leads:18,Dealer_Triggers:15},
+  {Date:"2026-07-26",Campaign:"AHM-Search-Buy-Used-Car-8april",Triggered_Leads:31,Dealer_Triggers:14},
+  {Date:"2026-07-26",Campaign:"AHM-UCR-Catalogue-Ads",Triggered_Leads:82,Dealer_Triggers:69},
+  {Date:"2026-07-26",Campaign:"Chandigarh-UCR-Catalogue-Ads",Triggered_Leads:54,Dealer_Triggers:46},
+  {Date:"2026-07-26",Campaign:"CHD-Buyer-Acquisition-6April",Triggered_Leads:27,Dealer_Triggers:16},
+  {Date:"2026-07-26",Campaign:"Nashik-UCR-Catalogue-Ads",Triggered_Leads:83,Dealer_Triggers:81},
+  {Date:"2026-07-26",Campaign:"Nasik-Search-Buy-UsedCar-8april",Triggered_Leads:12,Dealer_Triggers:8},
+  {Date:"2026-07-26",Campaign:"Nashik-Whatsup-Leads -13thJuly",Triggered_Leads:18,Dealer_Triggers:16}
 ];
 
 // Load manually-set dealer triggers for LeadForm campaigns from localStorage
