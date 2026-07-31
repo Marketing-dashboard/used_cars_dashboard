@@ -627,6 +627,19 @@ onAuthStateChanged(auth, async (user) => {
 
 <!-- ── DASHBOARD LOGIC ── -->
 <script>
+var BUILD_TS = '2026-01-01T00:00:00.000Z'; // replaced by Apps Script on each push
+
+// Force reload if a newer version has been pushed
+(function(){
+  var stored = sessionStorage.getItem('uc_build_ts');
+  if (stored && stored !== BUILD_TS) {
+    sessionStorage.setItem('uc_build_ts', BUILD_TS);
+    location.reload(true);
+    return;
+  }
+  sessionStorage.setItem('uc_build_ts', BUILD_TS);
+})();
+
 var DATA_RAW = [
   {Campaign:"AHM-Search-Buy-Used-Car-8april", Spends:166258.23, Impressions:354016, Clicks:68156, Conversions:6707.37, Platform:"Google", City:"Ahmedabad", Type:"Search", Triggered_Leads:3355, Dealer_Triggers:1637, Status:"Ongoing", StartDate:"2026-04-08", EndDate:null},
   {Campaign:"AHM-UCR-Catalogue-Ads", Spends:120989.87, Impressions:3916419, Clicks:358068, Conversions:4115, Platform:"Meta", City:"Ahmedabad", Type:"Catalogue", Triggered_Leads:4812, Dealer_Triggers:3186, Status:"Ongoing", StartDate:"2026-04-20", EndDate:null},
