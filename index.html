@@ -2953,26 +2953,32 @@ function renderComparison() {
     var delta = pctDelta(junVal, julVal);
     var up = delta >= 0;
     var arrow = up ? '▲' : '▼';
-    var dCol = up ? '#059669' : '#DC2626';
-    // For cost metrics (CPL), lower is better
-    if(unit==='cpl') { dCol = up ? '#DC2626' : '#059669'; }
+    var isGood = unit==='cpl' ? !up : up;
+    var dCol  = isGood ? '#059669' : '#DC2626';
+    var bgTop = isGood ? 'linear-gradient(135deg,#F0FDF4 0%,#DCFCE7 100%)' : 'linear-gradient(135deg,#FFF1F2 0%,#FFE4E6 100%)';
+    var borderCol = isGood ? '#BBF7D0' : '#FECDD3';
+    var accentCol = isGood ? '#059669' : '#DC2626';
     var formattedJun = fmt(junVal);
     var formattedJul = fmt(julVal);
-    return '<div style="flex:1;min-width:130px;background:var(--bg,#fff);border:1px solid var(--border);border-radius:12px;padding:14px 16px;display:flex;flex-direction:column;gap:6px">'
-      +'<div style="font-size:10px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:2px">'+label+'</div>'
-      +'<div style="display:flex;align-items:flex-end;justify-content:space-between;gap:8px">'
-        +'<div style="display:flex;flex-direction:column;gap:2px">'
-          +'<div style="font-size:9px;color:var(--text3);font-weight:500">Jun</div>'
-          +'<div style="font-size:13px;font-weight:700;color:var(--text2)">'+formattedJun+'</div>'
+    return '<div style="flex:1;min-width:150px;max-width:calc(25% - 8px);background:'+bgTop+';border:1.5px solid '+borderCol+';border-radius:14px;padding:14px 16px 12px;display:flex;flex-direction:column;gap:0;overflow:hidden;box-shadow:0 1px 4px rgba(0,0,0,0.05)">'
+      // accent top bar
+      +'<div style="height:3px;background:'+accentCol+';border-radius:2px;margin-bottom:10px;opacity:0.7"></div>'
+      +'<div style="font-size:10px;font-weight:700;color:'+accentCol+';text-transform:uppercase;letter-spacing:.6px;margin-bottom:8px">'+label+'</div>'
+      // Jun → Jul row
+      +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:8px">'
+        +'<div style="flex:1;min-width:0;background:rgba(255,255,255,0.6);border-radius:8px;padding:6px 8px">'
+          +'<div style="font-size:9px;color:#6B7280;font-weight:600;margin-bottom:2px">JUN</div>'
+          +'<div style="font-size:12px;font-weight:700;color:#374151;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+formattedJun+'</div>'
         +'</div>'
-        +'<div style="font-size:15px;color:#C7CDD9">→</div>'
-        +'<div style="display:flex;flex-direction:column;gap:2px;align-items:flex-end">'
-          +'<div style="font-size:9px;color:var(--text3);font-weight:500">Jul</div>'
-          +'<div style="font-size:13px;font-weight:700;color:var(--text)">'+formattedJul+'</div>'
+        +'<div style="font-size:12px;color:#9CA3AF;flex-shrink:0">→</div>'
+        +'<div style="flex:1;min-width:0;background:rgba(255,255,255,0.85);border-radius:8px;padding:6px 8px;box-shadow:0 1px 3px rgba(0,0,0,0.06)">'
+          +'<div style="font-size:9px;color:'+accentCol+';font-weight:700;margin-bottom:2px">JUL</div>'
+          +'<div style="font-size:12px;font-weight:800;color:#111827;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+formattedJul+'</div>'
         +'</div>'
       +'</div>'
-      +'<div style="margin-top:2px;display:flex;align-items:center;gap:4px;padding:3px 8px;border-radius:20px;background:'+(up?'#ECFDF5':'#FEF2F2')+';width:fit-content">'
-        +'<span style="font-size:10px;color:'+dCol+';font-weight:700">'+arrow+' '+(delta>0?'+':'')+delta+'%</span>'
+      // delta badge
+      +'<div style="display:inline-flex;align-items:center;gap:3px;padding:3px 9px;border-radius:20px;background:'+dCol+';width:fit-content">'
+        +'<span style="font-size:10px;color:#fff;font-weight:700">'+arrow+' '+(delta>0?'+':'')+delta+'%</span>'
       +'</div>'
     +'</div>';
   }
