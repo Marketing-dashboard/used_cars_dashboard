@@ -2577,6 +2577,9 @@ var DATA_TRIGGERS = [
   {Date:"2026-08-06",Campaign:"Nashik-Whatsup-Leads -13thJuly",Triggered_Leads:59,Dealer_Triggers:32}
 ];
 
+// Organic (city-wise) leads -- replaced by Apps Script on each push
+var DATA_ORGANIC = [];
+
 // Load manually-set dealer triggers for LeadForm campaigns from localStorage
 (function() {
   DATA_RAW.forEach(function(r) {
@@ -3399,7 +3402,78 @@ function renderCity() {
   });
   html+='</tbody></table></div></div>';
 
+  var _s = document.getElementById('date-start').value;
+  var _e = document.getElementById('date-end').value;
+  html += buildWeeklyOrgTable(_s, _e);
+
   el.innerHTML=html;
+}
+
+
+function weekMonday(dateStr) {
+  var d = new Date(dateStr + 'T00:00:00');
+  var day = d.getDay();
+  var diff = (day === 0) ? -6 : 1 - day;
+  d.setDate(d.getDate() + diff);
+  return d.toISOString().substring(0, 10);
+}
+
+function cityFromCampaign(camp) {
+  var lc = camp.toLowerCase();
+  if (lc.indexOf('ahm') !== -1 || lc.indexOf('ahmedabad') !== -1) return 'Ahmedabad';
+  if (lc.indexOf('chd') !== -1 || lc.indexOf('chandigarh') !== -1) return 'Chandigarh';
+  if (lc.indexOf('nashik') !== -1 || lc.indexOf('nasik') !== -1) return 'Nashik';
+  return null;
+}
+
+function buildWeeklyOrgTable(s, e) {
+  var CITIES = ['Ahmedabad','Chandigarh','Nashik'];
+  var weeks = {};
+  function ensureWeek(w, city) {
+    if (!weeks[w]) weeks[w] = {};
+    if (!weeks[w][city]) weeks[w][city] = {org:0, mkt:0};
+  }
+  DATA_ORGANIC.forEach(function(d) {
+    if (!d.Date || !d.City) return;
+    if (s && d.Date < s) return;
+    if (e && d.Date > e) return;
+    var w = weekMonday(d.Date);
+    ensureWeek(w, d.City);
+    weeks[w][d.City].org += (d.Organic_Leads || 0);
+  });
+  DATA_TRIGGERS.forEach(function(d) {
+    if (!d.Date) return;
+    if (s && d.Date < s) return;
+    if (e && d.Date > e) return;
+    var city = cityFromCampaign(d.Campaign || '');
+    if (!city) return;
+    var w = weekMonday(d.Date);
+    ensureWeek(w, city);
+    weeks[w][city].mkt += (d.Dealer_Triggers || 0);
+  });
+  var weekKeys = Object.keys(weeks).sort();
+  if (!weekKeys.length && !DATA_ORGANIC.length) return '';
+  var html = '<div class="tbl-card" style="margin-top:16px"><div class="tbl-toolbar"><span class="tbl-title">Week-wise Organic &amp; Marketing Leads by City</span><span class="tbl-sub">Organic = Triggers_Organic sheet &middot; Marketing = Dealer Triggers</span></div>';
+  html += '<div class="tbl-wrap"><table><thead><tr><th class="left sticky" style="left:0;min-width:110px">Week (Mon)</th>';
+  CITIES.forEach(function(c) { html += '<th colspan="2" style="text-align:center;border-left:2px solid var(--border2)">' + c + '</th>'; });
+  html += '</tr><tr><th class="left sticky" style="left:0"></th>';
+  CITIES.forEach(function() { html += '<th style="font-size:11px;color:var(--text2);border-left:2px solid var(--border2)">Organic</th><th style="font-size:11px;color:var(--text2)">Mktg (Dealer)</th>'; });
+  html += '</tr></thead><tbody>';
+  weekKeys.forEach(function(w) {
+    html += '<tr><td class="left sticky" style="left:0;font-size:12px;color:var(--text2)">' + w + '</td>';
+    CITIES.forEach(function(c) {
+      var v = weeks[w][c] || {org:0, mkt:0};
+      html += '<td style="border-left:2px solid var(--border2)">' + (v.org || '—') + '</td><td>' + (v.mkt || '—') + '</td>';
+    });
+    html += '</tr>';
+  });
+  var totals = {};
+  CITIES.forEach(function(c) { totals[c] = {org:0, mkt:0}; });
+  weekKeys.forEach(function(w) { CITIES.forEach(function(c) { if (weeks[w][c]) { totals[c].org += weeks[w][c].org; totals[c].mkt += weeks[w][c].mkt; } }); });
+  html += '<tfoot><tr><td class="left sticky" style="left:0;font-weight:700">Total</td>';
+  CITIES.forEach(function(c) { html += '<td style="font-weight:700;border-left:2px solid var(--border2)">' + (totals[c].org || '—') + '</td><td style="font-weight:700">' + (totals[c].mkt || '—') + '</td>'; });
+  html += '</tr></tfoot></table></div></div>';
+  return html;
 }
 
 // ── CAMPAIGN DETAIL ───────────────────────────────────────────────────────────
