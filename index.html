@@ -3418,6 +3418,15 @@ function weekMonday(dateStr) {
   return d.toISOString().substring(0, 10);
 }
 
+function weekLabel(mondayStr) {
+  var MONTHS = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+  var mon = new Date(mondayStr + 'T00:00:00');
+  var sun = new Date(mondayStr + 'T00:00:00');
+  sun.setDate(sun.getDate() + 6);
+  var fmt = function(d) { return d.getDate() + ' ' + MONTHS[d.getMonth()]; };
+  return fmt(mon) + ' – ' + fmt(sun);
+}
+
 function cityFromCampaign(camp) {
   var lc = camp.toLowerCase();
   if (lc.indexOf('ahm') !== -1 || lc.indexOf('ahmedabad') !== -1) return 'Ahmedabad';
@@ -3460,7 +3469,7 @@ function buildWeeklyOrgTable(s, e) {
   CITIES.forEach(function() { html += '<th style="font-size:11px;color:var(--text2);border-left:2px solid var(--border2)">Organic</th><th style="font-size:11px;color:var(--text2)">Mktg (Dealer)</th>'; });
   html += '</tr></thead><tbody>';
   weekKeys.forEach(function(w) {
-    html += '<tr><td class="left sticky" style="left:0;font-size:12px;color:var(--text2)">' + w + '</td>';
+    html += '<tr><td class="left sticky" style="left:0;font-size:12px;color:var(--text2)">' + weekLabel(w) + '</td>';
     CITIES.forEach(function(c) {
       var v = weeks[w][c] || {org:0, mkt:0};
       html += '<td style="border-left:2px solid var(--border2)">' + (v.org || '—') + '</td><td>' + (v.mkt || '—') + '</td>';
@@ -3470,7 +3479,7 @@ function buildWeeklyOrgTable(s, e) {
   var totals = {};
   CITIES.forEach(function(c) { totals[c] = {org:0, mkt:0}; });
   weekKeys.forEach(function(w) { CITIES.forEach(function(c) { if (weeks[w][c]) { totals[c].org += weeks[w][c].org; totals[c].mkt += weeks[w][c].mkt; } }); });
-  html += '<tfoot><tr><td class="left sticky" style="left:0;font-weight:700">Total</td>';
+  html += '<tfoot><tr><td class="left sticky" style="left:0;font-weight:700;min-width:140px">Total</td>';
   CITIES.forEach(function(c) { html += '<td style="font-weight:700;border-left:2px solid var(--border2)">' + (totals[c].org || '—') + '</td><td style="font-weight:700">' + (totals[c].mkt || '—') + '</td>'; });
   html += '</tr></tfoot></table></div></div>';
   return html;
